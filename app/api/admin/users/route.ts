@@ -22,7 +22,7 @@ function getSupabaseClient(req: NextRequest) {
 }
 
 // 관리자 권한 체크
-async function checkAdmin(supabase: ReturnType<typeof createClient>) {
+async function checkAdmin(supabase: any) {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   
   if (authError || !user) {
