@@ -3,7 +3,7 @@ import { CATEGORIES, getCategoryBySlug, postMatchesCategory } from '@/lib/catego
 import { getAllPosts } from '@/lib/posts'
 import type { Metadata } from 'next'
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export const dynamic = 'force-dynamic'
 
@@ -11,15 +11,17 @@ export function generateStaticParams() {
   return CATEGORIES.map((c) => ({ slug: c.slug }))
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const cat = getCategoryBySlug(params.slug)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const cat = getCategoryBySlug(slug)
   const title = cat ? `${cat.label} - KWN` : '카테고리 - KWN'
-  return { title, alternates: { canonical: `/category/${params.slug}` } }
+  return { title, alternates: { canonical: `/category/${slug}` } }
 }
 
 export default async function CategoryPage({ params }: Props) {
-  const cat = getCategoryBySlug(params.slug)
-  const posts = (await getAllPosts()).filter((p) => postMatchesCategory(p, params.slug))
+  const { slug } = await params
+  const cat = getCategoryBySlug(slug)
+  const posts = (await getAllPosts()).filter((p) => postMatchesCategory(p, slug))
 
   return (
     <main className="wrapper-fluid" style={{ padding: '4rem 1.25rem' }}>
