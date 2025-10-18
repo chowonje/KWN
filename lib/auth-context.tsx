@@ -57,11 +57,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error: { message: 'Supabase가 설정되지 않았습니다.' } }
     }
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
-      return { error }
+      
+      if (error) return { error }
+      
+      // 승인 상태 체크
+      if (data.user) {
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('approval_status, role')
+          .eq('id', data.user.id)
+          .single()
+        
+        if (profileError) {
+          console.error('프로필 조회 오류:', profileError)
+          return { error: { message: '사용자 정보를 확인할 수 없습니다.' } }
+        }
+        
+        // 승인 대기 중인 경우
+        if (profile.approval_status === 'pending') {
+          await supabase.auth.signOut()
+          return { 
+            error: { 
+              message: '⏳ 관리자 승인 대기 중입니다.\n승인 후 로그인하실 수 있습니다.' 
+            } 
+          }
+        }
+        
+        // 거부된 경우
+        if (profile.approval_status === 'rejected') {
+          await supabase.auth.signOut()
+          return { 
+            error: { 
+              message: '❌ 회원가입이 거부되었습니다.\n자세한 사항은 관리자에게 문의하세요.' 
+            } 
+          }
+        }
+      }
+      
+      return { error: null }
     } catch (err: any) {
       return { error: err }
     }

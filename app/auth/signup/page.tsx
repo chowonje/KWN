@@ -41,9 +41,11 @@ export default function SignupPage() {
         setError(error.message || '회원가입에 실패했습니다.')
       } else {
         setSuccess(true)
+        // 승인 대기 안내 메시지 표시
+        alert('✅ 회원가입이 완료되었습니다!\n\n⏳ 관리자 승인 후 로그인하실 수 있습니다.\n승인은 보통 24시간 이내에 처리됩니다.')
         setTimeout(() => {
           router.push('/auth/login')
-        }, 2000)
+        }, 3000)
       }
     } catch (err: any) {
       setError(err.message || '회원가입 중 오류가 발생했습니다.')
