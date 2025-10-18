@@ -83,7 +83,7 @@ export default async function HomeList({ categorySlug }: Props) {
 
             return (
               <article className="card" key={post.slug}>
-                <Link href={`/blog/${post.slug}`} className="card-media">
+                <Link href={`/category/edit/${post.slug}`} className="card-media">
                   {post.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={post.image} alt={post.title || ''} />
@@ -133,7 +133,7 @@ export default async function HomeList({ categorySlug }: Props) {
                 <div className="card-body">
                   {/* 제목 */}
                   <h3 className="card-title">
-                    <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                    <Link href={`/category/edit/${post.slug}`}>{post.title}</Link>
                   </h3>
 
                   {/* 요약 */}

@@ -68,7 +68,7 @@ export default function EditPostPage() {
         body: JSON.stringify({ slug, frontmatter, content })
       })
       if (!res.ok) throw new Error('failed to save')
-      router.push(`/blog/${slug}`)
+      router.push(`/category/edit/${slug}`)
     } catch (err: any) {
       setError(err.message ?? '저장 실패')
     } finally {

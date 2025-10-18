@@ -148,7 +148,7 @@ export default async function CategoryPage({ params }: Props) {
                 letterSpacing: '-0.01em',
                 lineHeight: 1.4
               }}>
-                <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+                <Link href={`/category/edit/${post.slug}`}>{post.title}</Link>
               </h2>
               <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 10, fontWeight: 500 }}>
                 {(post.author || post.date) && (
@@ -190,7 +190,7 @@ export default async function CategoryPage({ params }: Props) {
                 </Link>
                 <span aria-hidden style={{ color: 'var(--border)' }}>·</span>
                 <Link 
-                  href={`/blog/edit/${post.slug}`}
+                  href={`/category/edit/${post.slug}`}
                   style={{
                     fontSize: 14,
                     fontWeight: 600,

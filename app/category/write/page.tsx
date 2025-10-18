@@ -128,7 +128,7 @@ export default function WritePage() {
       // 임시저장 삭제
       localStorage.removeItem('draft')
       
-      router.push(`/blog/${data.slug}`)
+      router.push(`/category/edit/${data.slug}`)
     } catch (err: any) {
       setError(err.message ?? '저장 실패')
     } finally {
