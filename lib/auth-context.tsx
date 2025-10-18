@@ -74,26 +74,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         
         if (profileError) {
           console.error('프로필 조회 오류:', profileError)
-          return { error: { message: '사용자 정보를 확인할 수 없습니다.' } }
+          // 프로필 조회 실패 시 로그인은 허용 (기존 사용자일 수 있음)
+          console.warn('프로필 조회 실패, 하지만 로그인 허용')
+          return { error: null }
         }
         
-        // 승인 대기 중인 경우
-        if (profile.approval_status === 'pending') {
-          await supabase.auth.signOut()
-          return { 
-            error: { 
-              message: '⏳ 관리자 승인 대기 중입니다.\n승인 후 로그인하실 수 있습니다.' 
-            } 
+        // profile이 있고 승인 상태를 확인할 수 있는 경우에만 체크
+        if (profile && profile.approval_status) {
+          // 승인 대기 중인 경우
+          if (profile.approval_status === 'pending') {
+            await supabase.auth.signOut()
+            return { 
+              error: { 
+                message: '⏳ 관리자 승인 대기 중입니다.\n승인 후 로그인하실 수 있습니다.' 
+              } 
+            }
           }
-        }
-        
-        // 거부된 경우
-        if (profile.approval_status === 'rejected') {
-          await supabase.auth.signOut()
-          return { 
-            error: { 
-              message: '❌ 회원가입이 거부되었습니다.\n자세한 사항은 관리자에게 문의하세요.' 
-            } 
+          
+          // 거부된 경우
+          if (profile.approval_status === 'rejected') {
+            await supabase.auth.signOut()
+            return { 
+              error: { 
+                message: '❌ 회원가입이 거부되었습니다.\n자세한 사항은 관리자에게 문의하세요.' 
+              } 
+            }
           }
         }
       }
