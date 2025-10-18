@@ -35,7 +35,11 @@ async function checkAdmin(supabase: ReturnType<typeof createClient>) {
     .eq('id', user.id)
     .single()
 
-  if (profileError || !profile || profile.role !== 'admin') {
+  if (profileError || !profile) {
+    return { error: '관리자 권한이 필요합니다', status: 403 }
+  }
+
+  if ((profile as { role: string }).role !== 'admin') {
     return { error: '관리자 권한이 필요합니다', status: 403 }
   }
 
