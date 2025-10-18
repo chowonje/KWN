@@ -23,6 +23,7 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('all')
   const [isAdmin, setIsAdmin] = useState(false)
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null)
 
   // 관리자 권한 체크
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function AdminUsersPage() {
 
         if (data?.role === 'admin') {
           setIsAdmin(true)
+          setCurrentUserId(user.id) // 현재 사용자 ID 저장
         } else {
           alert('관리자 권한이 필요합니다')
           router.push('/')
@@ -145,6 +147,52 @@ export default function AdminUsersPage() {
       setUsers(prev => prev.map(u => 
         u.id === userId 
           ? { ...u, approval_status: action === 'approve' ? 'approved' : 'rejected', approval_processed_at: new Date().toISOString() }
+          : u
+      ))
+    } catch (error: any) {
+      alert(`오류: ${error.message}`)
+    }
+  }
+
+  // 역할 변경 처리
+  const handleRoleChange = async (userId: string, currentRole: string) => {
+    const newRole = currentRole === 'admin' ? 'user' : 'admin'
+    const confirmMessage = newRole === 'admin'
+      ? '⚠️ 이 사용자를 관리자로 승격하시겠습니까?\n관리자는 모든 사용자를 관리할 수 있습니다.'
+      : '이 사용자를 일반 사용자로 변경하시겠습니까?'
+    
+    if (!confirm(confirmMessage)) return
+
+    try {
+      const { createClient } = await import('@supabase/supabase-js')
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+
+      const { data: { session } } = await supabase.auth.getSession()
+
+      const response = await fetch('/api/admin/users', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`
+        },
+        body: JSON.stringify({ userId, role: newRole })
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to change role')
+      }
+
+      alert(result.message)
+      
+      // 사용자 목록 업데이트
+      setUsers(prev => prev.map(u => 
+        u.id === userId 
+          ? { ...u, role: newRole }
           : u
       ))
     } catch (error: any) {
@@ -323,16 +371,37 @@ export default function AdminUsersPage() {
                     <td style={{ padding: '12px 16px', fontSize: 14 }}>{user.email}</td>
                     <td style={{ padding: '12px 16px', fontSize: 14 }}>{user.name}</td>
                     <td style={{ padding: '12px 16px', fontSize: 14 }}>
-                      <span style={{
-                        padding: '4px 8px',
-                        background: user.role === 'admin' ? '#dbeafe' : '#f3f4f6',
-                        color: user.role === 'admin' ? '#1e40af' : '#374151',
-                        borderRadius: 6,
-                        fontSize: 12,
-                        fontWeight: 600
-                      }}>
-                        {user.role}
-                      </span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <span style={{
+                          padding: '4px 8px',
+                          background: user.role === 'admin' ? '#dbeafe' : '#f3f4f6',
+                          color: user.role === 'admin' ? '#1e40af' : '#374151',
+                          borderRadius: 6,
+                          fontSize: 12,
+                          fontWeight: 600
+                        }}>
+                          {user.role === 'admin' ? '👑 admin' : 'user'}
+                        </span>
+                        {user.id !== currentUserId && (
+                          <button
+                            onClick={() => handleRoleChange(user.id, user.role)}
+                            style={{
+                              padding: '4px 8px',
+                              borderRadius: 6,
+                              border: '1px solid var(--border)',
+                              background: 'white',
+                              color: user.role === 'admin' ? '#dc2626' : '#3b82f6',
+                              fontSize: 11,
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              transition: 'all 0.2s'
+                            }}
+                            title={user.role === 'admin' ? '관리자 권한 제거' : '관리자로 승격'}
+                          >
+                            {user.role === 'admin' ? '▼' : '▲'}
+                          </button>
+                        )}
+                      </div>
                     </td>
                     <td style={{ padding: '12px 16px', fontSize: 14 }}>
                       <span style={{

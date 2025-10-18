@@ -126,3 +126,52 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// PATCH: 사용자 역할 변경 (관리자만)
+export async function PATCH(req: NextRequest) {
+  try {
+    const supabase = getSupabaseClient(req)
+    
+    // 관리자 체크
+    const authCheck = await checkAdmin(supabase)
+    if (authCheck.error) {
+      return NextResponse.json({ error: authCheck.error }, { status: authCheck.status })
+    }
+
+    const { userId, role } = await req.json() // role: 'user' | 'admin'
+    
+    if (!userId || !role) {
+      return NextResponse.json({ error: 'userId와 role이 필요합니다' }, { status: 400 })
+    }
+
+    if (role !== 'user' && role !== 'admin') {
+      return NextResponse.json({ error: 'role은 user 또는 admin이어야 합니다' }, { status: 400 })
+    }
+
+    // 자기 자신의 역할은 변경할 수 없음 (안전장치)
+    if (userId === authCheck.user!.id) {
+      return NextResponse.json({ 
+        error: '본인의 관리자 권한은 변경할 수 없습니다' 
+      }, { status: 403 })
+    }
+
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ role })
+      .eq('id', userId)
+      .select()
+      .single()
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 500 })
+    }
+
+    return NextResponse.json({ 
+      success: true, 
+      message: role === 'admin' ? '관리자로 승격되었습니다' : '일반 사용자로 변경되었습니다',
+      data 
+    })
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+}
+
