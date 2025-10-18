@@ -178,7 +178,7 @@ export default async function CategoryPage({ params }: Props) {
                 borderTop: '1px solid var(--border)'
               }}>
                 <Link 
-                  href={`/blog/${post.slug}`}
+                  href={`/category/view/${post.slug}`}
                   style={{
                     fontSize: 14,
                     fontWeight: 600,
