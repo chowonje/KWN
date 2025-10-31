@@ -660,6 +660,7 @@ export default function WritePage() {
                 </label>
               </div>
             </div>
+            </div>
           </>
         )}
       </div>
