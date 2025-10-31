@@ -24,30 +24,33 @@ export default async function CategoryPage({ params }: Props) {
   const posts = (await getAllPosts()).filter((p) => postMatchesCategory(p, slug))
 
   return (
-    <main className="wrapper-fluid" style={{ padding: '4rem 1.25rem' }}>
+    <main className="wrapper-fluid" style={{ padding: '3rem 2rem' }}>
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
         gap: '1rem', 
-        marginBottom: '2.5rem',
+        marginBottom: '3rem',
+        paddingBottom: '2rem',
+        borderBottom: '1px solid var(--border)',
         flexWrap: 'wrap'
       }}>
         <div>
           <h1 style={{ 
-            fontSize: '2rem', 
-            fontWeight: 800,
-            letterSpacing: '-0.02em',
-            margin: '0 0 4px'
+            fontSize: '32px', 
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+            margin: '0 0 8px',
+            color: 'var(--fg)'
           }}>
             {cat ? cat.label : '카테고리'}
           </h1>
           <Link 
             href="/category" 
             style={{ 
-              fontSize: '14px', 
-              color: 'var(--accent)',
-              fontWeight: 500
+              fontSize: '13px', 
+              color: 'var(--muted)',
+              fontWeight: 400
             }}
           >
             ← 전체 보기
@@ -57,10 +60,10 @@ export default async function CategoryPage({ params }: Props) {
           className="action-button-primary" 
           href="/category/write"
           style={{
-            padding: '10px 20px',
-            borderRadius: '10px',
-            fontWeight: 600,
-            fontSize: '14px',
+            padding: '8px 18px',
+            borderRadius: '4px',
+            fontWeight: 500,
+            fontSize: '13px',
             transition: 'all 0.2s ease',
             background: 'var(--accent)',
             color: 'white'
@@ -83,8 +86,8 @@ export default async function CategoryPage({ params }: Props) {
       ) : (
         <ul style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', 
-          gap: '1.5rem',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', 
+          gap: '40px 32px',
           listStyle: 'none',
           padding: 0,
           margin: 0
@@ -93,113 +96,102 @@ export default async function CategoryPage({ params }: Props) {
             <li 
               key={post.slug} 
               style={{ 
-                border: '1px solid var(--border)', 
-                borderRadius: 16, 
-                padding: '1.5rem',
-                background: 'white',
-                transition: 'all 0.3s ease',
-                boxShadow: 'var(--shadow-sm)'
+                border: 0,
+                borderRadius: 0,
+                padding: 0,
+                background: 'transparent',
+                transition: 'all 0.2s ease',
+                display: 'flex',
+                flexDirection: 'column'
               }}
               className="post-card"
             >
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12, flexWrap: 'wrap' }}>
-                {post.label && (
-                  <span style={{ 
-                    fontSize: 11, 
-                    color: 'white',
-                    background: 'var(--accent)',
-                    fontWeight: 600, 
-                    textTransform: 'uppercase',
-                    padding: '4px 8px',
-                    borderRadius: '6px'
+              {/* 이미지가 있으면 표시 */}
+              {post.image && (
+                <Link href={`/category/view/${post.slug}`}>
+                  <div style={{
+                    width: '100%',
+                    aspectRatio: '16 / 11',
+                    background: `url(${post.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    marginBottom: '16px',
+                    overflow: 'hidden'
                   }}>
-                    {post.label}
-                  </span>
-                )}
+                  </div>
+                </Link>
+              )}
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {/* 카테고리 */}
                 {post.category && (
-                  <span style={{ 
-                    fontSize: 12, 
-                    color: 'var(--muted)',
-                    background: 'var(--bg-secondary)',
-                    padding: '4px 8px',
-                    borderRadius: '6px',
-                    fontWeight: 500
+                  <div style={{
+                    display: 'inline-block',
+                    background: 'var(--category-bg)',
+                    color: 'white',
+                    padding: '4px 10px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.02em',
+                    textTransform: 'uppercase',
+                    alignSelf: 'flex-start'
                   }}>
                     {post.category}
-                  </span>
+                  </div>
                 )}
-                {post.featured && (
-                  <span style={{ 
-                    fontSize: 11, 
-                    color: 'white',
-                    background: '#ef4444',
-                    padding: '4px 8px',
-                    borderRadius: '6px',
-                    fontWeight: 600
-                  }}>
-                    Editor's Pick
-                  </span>
-                )}
-              </div>
-              <h2 style={{ 
-                fontSize: '1.125rem', 
-                fontWeight: 700, 
-                marginBottom: 10,
-                letterSpacing: '-0.01em',
-                lineHeight: 1.4
-              }}>
-                <Link href={`/category/view/${post.slug}`}>{post.title}</Link>
-              </h2>
-              <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 10, fontWeight: 500 }}>
-                {(post.author || post.date) && (
-                  <>
-                    {post.author && <span>{post.author}</span>}
-                    {post.author && post.date && <span> · </span>}
-                    {post.date && <span>{post.date}</span>}
-                  </>
-                )}
-              </p>
-              {post.summary && (
-                <p style={{ 
-                  color: 'var(--fg)', 
-                  fontSize: 14, 
-                  marginBottom: 14,
-                  lineHeight: 1.6,
-                  fontWeight: 500
+
+                {/* 제목 */}
+                <h2 style={{ 
+                  fontSize: '20px', 
+                  fontWeight: 600, 
+                  margin: 0,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.35,
+                  color: 'var(--fg)'
                 }}>
-                  {post.summary}
-                </p>
-              )}
-              <div style={{ 
-                marginTop: 16, 
-                display: 'flex', 
-                gap: 12,
-                paddingTop: 12,
-                borderTop: '1px solid var(--border)'
-              }}>
-                <Link 
-                  href={`/category/view/${post.slug}`}
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: 'var(--accent)',
-                    transition: 'opacity 0.2s'
-                  }}
-                >
-                  보기
-                </Link>
-                <span aria-hidden style={{ color: 'var(--border)' }}>·</span>
-                <Link 
-                  href={`/category/edit/${post.slug}`}
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: 'var(--muted)',
-                    transition: 'color 0.2s'
-                  }}
-                >
-                  수정
-                </Link>
+                  <Link href={`/category/view/${post.slug}`}>{post.title}</Link>
+                </h2>
+
+                {/* 요약 */}
+                {post.summary && (
+                  <p style={{ 
+                    color: 'var(--fg-secondary)', 
+                    fontSize: 15,
+                    margin: 0,
+                    lineHeight: 1.6,
+                    fontWeight: 400
+                  }}>
+                    {post.summary}
+                  </p>
+                )}
+
+                {/* 메타 정보 */}
+                <div style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 12,
+                  marginTop: 'auto',
+                  paddingTop: '4px'
+                }}>
+                  {post.author && (
+                    <span style={{ 
+                      fontSize: 13,
+                      color: 'var(--muted)',
+                      fontWeight: 400
+                    }}>
+                      {post.author}
+                    </span>
+                  )}
+                  {post.date && (
+                    <span style={{ 
+                      fontSize: 13,
+                      color: 'var(--muted)',
+                      fontWeight: 400
+                    }}>
+                      {post.date}
+                    </span>
+                  )}
+                </div>
               </div>
             </li>
           ))}

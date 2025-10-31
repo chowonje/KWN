@@ -80,23 +80,28 @@ export default function ViewPostPage() {
   if (!post) return null
 
   return (
-    <main className="wrapper" style={{ padding: '4rem 1.25rem', maxWidth: 920 }}>
+    <main style={{ 
+      maxWidth: 800, 
+      margin: '0 auto', 
+      padding: '64px 32px',
+      minHeight: '100vh'
+    }}>
       {/* 상단 액션 바 */}
       <div style={{
         display: 'flex',
-        gap: 12,
-        marginBottom: 32,
-        paddingBottom: 16,
+        gap: 10,
+        marginBottom: 48,
+        paddingBottom: 24,
         borderBottom: '1px solid var(--border)'
       }}>
         <Link
           href="/"
           style={{
-            padding: '10px 20px',
+            padding: '8px 16px',
             border: '1px solid var(--border)',
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 600,
+            borderRadius: 4,
+            fontSize: 13,
+            fontWeight: 500,
             color: 'var(--fg)',
             background: 'white',
             textDecoration: 'none',
@@ -110,30 +115,48 @@ export default function ViewPostPage() {
           <Link
             href={`/category/edit/${slug}`}
             style={{
-              padding: '10px 20px',
-              border: '1px solid var(--accent)',
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 600,
+              padding: '8px 16px',
+              border: '1px solid var(--fg)',
+              borderRadius: 4,
+              fontSize: 13,
+              fontWeight: 500,
               color: 'white',
-              background: 'var(--accent)',
+              background: 'var(--fg)',
               textDecoration: 'none',
               transition: 'all 0.2s'
             }}
           >
-            ✏️ 수정
+            수정
           </Link>
         )}
       </div>
 
       <article>
+        {/* 카테고리 배지 */}
+        {post.category && (
+          <div style={{
+            display: 'inline-block',
+            background: 'var(--category-bg)',
+            color: 'white',
+            padding: '4px 10px',
+            fontSize: '11px',
+            fontWeight: 600,
+            letterSpacing: '0.02em',
+            textTransform: 'uppercase',
+            marginBottom: 24
+          }}>
+            {post.category}
+          </div>
+        )}
+
         {/* 제목 */}
         <h1 style={{
-          fontSize: 'clamp(2rem, 5vw, 3rem)',
-          fontWeight: 800,
-          marginBottom: '1.5rem',
-          lineHeight: 1.2,
-          letterSpacing: '-0.02em'
+          fontSize: 'clamp(32px, 5vw, 42px)',
+          fontWeight: 600,
+          marginBottom: 20,
+          lineHeight: 1.25,
+          letterSpacing: '-0.03em',
+          color: 'var(--fg)'
         }}>
           {post.title}
         </h1>
@@ -142,47 +165,25 @@ export default function ViewPostPage() {
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: 16,
-          marginBottom: '2rem',
-          paddingBottom: '1.5rem',
+          gap: 12,
+          marginBottom: 40,
+          paddingBottom: 24,
           borderBottom: '1px solid var(--border)',
-          fontSize: 14,
-          color: 'var(--muted)'
+          fontSize: 13,
+          color: 'var(--muted)',
+          fontWeight: 400
         }}>
           {post.author && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                <circle cx="12" cy="7" r="4"></circle>
-              </svg>
-              {post.author}
-            </div>
+            <span>{post.author}</span>
           )}
           {post.date && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                <line x1="16" y1="2" x2="16" y2="6"></line>
-                <line x1="8" y1="2" x2="8" y2="6"></line>
-                <line x1="3" y1="10" x2="21" y2="10"></line>
-              </svg>
-              {post.date}
-            </div>
-          )}
-          {post.category && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-              {post.category}
-            </div>
+            <span>{post.date}</span>
           )}
         </div>
 
         {/* 대표 이미지 */}
         {post.image && (
-          <div style={{ marginBottom: '2rem', borderRadius: 12, overflow: 'hidden' }}>
+          <div style={{ marginBottom: 40, overflow: 'hidden' }}>
             <img 
               src={post.image} 
               alt={post.title}
@@ -198,14 +199,13 @@ export default function ViewPostPage() {
         {/* 요약 */}
         {post.summary && (
           <div style={{
-            padding: 20,
-            background: 'var(--bg-secondary)',
-            borderLeft: '4px solid var(--accent)',
-            borderRadius: 8,
-            marginBottom: '2rem',
-            fontSize: 16,
-            lineHeight: 1.6,
-            color: 'var(--muted)'
+            padding: '24px 0',
+            marginBottom: 40,
+            fontSize: 18,
+            lineHeight: 1.7,
+            color: 'var(--fg-secondary)',
+            fontWeight: 400,
+            borderBottom: '1px solid var(--border)'
           }}>
             {post.summary}
           </div>
@@ -213,11 +213,13 @@ export default function ViewPostPage() {
 
         {/* 본문 */}
         <div 
-          className="prose prose-lg"
+          className="prose"
           style={{
             maxWidth: 'none',
             lineHeight: 1.8,
-            fontSize: 17
+            fontSize: 17,
+            color: 'var(--fg)',
+            fontWeight: 400
           }}
           dangerouslySetInnerHTML={{ 
             __html: DOMPurify.sanitize(post.content) 
@@ -227,32 +229,21 @@ export default function ViewPostPage() {
         {/* 태그 */}
         {post.tags && post.tags.length > 0 && (
           <div style={{
-            marginTop: '3rem',
-            paddingTop: '2rem',
+            marginTop: 48,
+            paddingTop: 32,
             borderTop: '1px solid var(--border)'
           }}>
-            <h3 style={{
-              fontSize: 14,
-              fontWeight: 700,
-              marginBottom: 12,
-              color: 'var(--muted)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
-              태그
-            </h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
               {post.tags.map((tag: string, idx: number) => (
                 <span
                   key={idx}
                   style={{
-                    fontSize: 14,
-                    color: 'var(--accent)',
-                    background: 'rgba(59, 130, 246, 0.08)',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    fontWeight: 600,
-                    border: '1px solid rgba(59, 130, 246, 0.15)'
+                    fontSize: 13,
+                    color: 'var(--fg)',
+                    background: 'var(--bg-secondary)',
+                    padding: '6px 14px',
+                    borderRadius: 4,
+                    fontWeight: 500
                   }}
                 >
                   #{tag}
@@ -265,8 +256,8 @@ export default function ViewPostPage() {
 
       {/* 하단 액션 */}
       <div style={{
-        marginTop: '3rem',
-        paddingTop: '2rem',
+        marginTop: 64,
+        paddingTop: 32,
         borderTop: '1px solid var(--border)',
         display: 'flex',
         justifyContent: 'space-between',
@@ -275,11 +266,11 @@ export default function ViewPostPage() {
         <Link
           href="/"
           style={{
-            padding: '12px 24px',
+            padding: '10px 20px',
             border: '1px solid var(--border)',
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 600,
+            borderRadius: 4,
+            fontSize: 13,
+            fontWeight: 500,
             color: 'var(--fg)',
             background: 'white',
             textDecoration: 'none',
@@ -293,18 +284,18 @@ export default function ViewPostPage() {
           <Link
             href={`/category/edit/${slug}`}
             style={{
-              padding: '12px 24px',
-              border: '1px solid var(--accent)',
-              borderRadius: 10,
-              fontSize: 14,
-              fontWeight: 600,
+              padding: '10px 20px',
+              border: '1px solid var(--fg)',
+              borderRadius: 4,
+              fontSize: 13,
+              fontWeight: 500,
               color: 'white',
-              background: 'var(--accent)',
+              background: 'var(--fg)',
               textDecoration: 'none',
               transition: 'all 0.2s'
             }}
           >
-            ✏️ 글 수정하기
+            글 수정하기
           </Link>
         )}
       </div>

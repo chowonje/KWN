@@ -7,20 +7,23 @@ export default async function BlogIndex() {
   const posts = await getAllPosts()
 
   return (
-    <main className="wrapper-fluid" style={{ padding: '4rem 1.25rem' }}>
+    <main className="wrapper-fluid" style={{ padding: '3rem 2rem' }}>
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center', 
         gap: '1rem', 
-        marginBottom: '2.5rem',
+        marginBottom: '3rem',
+        paddingBottom: '2rem',
+        borderBottom: '1px solid var(--border)',
         flexWrap: 'wrap'
       }}>
         <h1 style={{ 
-          fontSize: '2rem', 
-          fontWeight: 800,
-          letterSpacing: '-0.02em',
-          margin: 0
+          fontSize: '32px', 
+          fontWeight: 600,
+          letterSpacing: '-0.03em',
+          margin: 0,
+          color: 'var(--fg)'
         }}>
           전체 글
         </h1>
@@ -28,10 +31,10 @@ export default async function BlogIndex() {
           className="action-button-primary" 
           href="/category/write"
           style={{
-            padding: '10px 20px',
-            borderRadius: '10px',
-            fontWeight: 600,
-            fontSize: '14px',
+            padding: '8px 18px',
+            borderRadius: '4px',
+            fontWeight: 500,
+            fontSize: '13px',
             transition: 'all 0.2s ease',
             background: 'var(--accent)',
             color: 'white'
@@ -54,8 +57,8 @@ export default async function BlogIndex() {
       ) : (
         <ul style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
-          gap: '2rem',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', 
+          gap: '40px 32px',
           listStyle: 'none',
           padding: 0,
           margin: 0
@@ -64,102 +67,64 @@ export default async function BlogIndex() {
             <li 
               key={post.slug} 
               style={{ 
-                border: '1px solid var(--border)', 
-                borderRadius: 16, 
-                overflow: 'hidden',
-                background: 'white',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-                cursor: 'pointer'
+                border: 0,
+                borderRadius: 0,
+                overflow: 'visible',
+                background: 'transparent',
+                transition: 'all 0.2s ease',
+                cursor: 'pointer',
+                display: 'flex',
+                flexDirection: 'column'
               }}
               className="post-card"
             >
               {/* 대표 이미지 */}
-              <Link href={`/category/${post.category}/${post.slug}`}>
+              <Link href={`/category/view/${post.slug}`}>
                 <div style={{
                   width: '100%',
-                  height: 200,
+                  aspectRatio: '16 / 11',
                   background: post.image 
                     ? `url(${post.image})` 
-                    : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    : 'var(--bg-secondary)',
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
-                  position: 'relative'
+                  position: 'relative',
+                  overflow: 'hidden',
+                  marginBottom: '16px'
                 }}>
-                  {/* 라벨 배지 */}
-                  {(post.label || post.featured) && (
-                    <div style={{ 
-                      position: 'absolute',
-                      top: 12,
-                      left: 12,
-                      display: 'flex',
-                      gap: 6
-                    }}>
-                      {post.label && (
-                        <span style={{ 
-                          fontSize: 11, 
-                          color: 'white',
-                          background: 'rgba(0,0,0,0.7)',
-                          backdropFilter: 'blur(10px)',
-                          fontWeight: 600, 
-                          textTransform: 'uppercase',
-                          padding: '5px 10px',
-                          borderRadius: '6px'
-                        }}>
-                          {post.label}
-                        </span>
-                      )}
-                      {post.featured && (
-                        <span style={{ 
-                          fontSize: 11, 
-                          color: 'white',
-                          background: '#ef4444',
-                          padding: '5px 10px',
-                          borderRadius: '6px',
-                          fontWeight: 600
-                        }}>
-                          ⭐ Pick
-                        </span>
-                      )}
-                    </div>
-                  )}
-                  
-                  {/* 카테고리 태그 */}
-                  {post.category && (
-                    <div style={{
-                      position: 'absolute',
-                      bottom: 12,
-                      left: 12
-                    }}>
-                      <span style={{ 
-                        fontSize: 12, 
-                        color: 'white',
-                        background: 'rgba(0,0,0,0.6)',
-                        backdropFilter: 'blur(10px)',
-                        padding: '5px 12px',
-                        borderRadius: '6px',
-                        fontWeight: 600
-                      }}>
-                        {post.category}
-                      </span>
-                    </div>
-                  )}
                 </div>
               </Link>
 
               {/* 카드 콘텐츠 */}
-              <div style={{ padding: '1.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {/* 카테고리 */}
+                {post.category && (
+                  <div style={{
+                    display: 'inline-block',
+                    background: 'var(--category-bg)',
+                    color: 'white',
+                    padding: '4px 10px',
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    letterSpacing: '0.02em',
+                    textTransform: 'uppercase',
+                    alignSelf: 'flex-start'
+                  }}>
+                    {post.category}
+                  </div>
+                )}
+
                 {/* 제목 */}
                 <h2 style={{ 
-                  fontSize: '1.25rem', 
-                  fontWeight: 700, 
-                  marginBottom: 10,
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1.3,
+                  fontSize: '20px', 
+                  fontWeight: 600, 
+                  margin: 0,
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1.35,
                   color: 'var(--fg)'
                 }}>
                   <Link 
-                    href={`/category/${post.category}/${post.slug}`}
+                    href={`/category/view/${post.slug}`}
                     style={{ color: 'inherit' }}
                   >
                     {post.title}
@@ -169,15 +134,16 @@ export default async function BlogIndex() {
                 {/* 서브 타이틀 (요약) */}
                 {post.summary && (
                   <p style={{ 
-                    color: 'var(--muted)', 
-                    fontSize: 14, 
-                    marginBottom: 16,
+                    color: 'var(--fg-secondary)', 
+                    fontSize: 15, 
+                    margin: 0,
                     lineHeight: 1.6,
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
                     display: '-webkit-box',
                     WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical'
+                    WebkitBoxOrient: 'vertical',
+                    fontWeight: 400
                   } as React.CSSProperties}>
                     {post.summary}
                   </p>
@@ -187,65 +153,28 @@ export default async function BlogIndex() {
                 <div style={{ 
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'space-between',
-                  paddingTop: 16,
-                  borderTop: '1px solid var(--border)',
-                  marginTop: 16
+                  gap: 12,
+                  marginTop: 'auto',
+                  paddingTop: '4px'
                 }}>
-                  <div style={{ 
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    color: 'var(--muted)',
-                    fontSize: 13,
-                    fontWeight: 500
-                  }}>
-                    {post.author && (
-                      <span style={{ 
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6
-                      }}>
-                        <span style={{
-                          width: 24,
-                          height: 24,
-                          borderRadius: '50%',
-                          background: 'var(--accent)',
-                          color: 'white',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: 11,
-                          fontWeight: 700
-                        }}>
-                          {post.author.charAt(0).toUpperCase()}
-                        </span>
-                        <span>{post.author}</span>
-                      </span>
-                    )}
-                    {post.author && post.date && (
-                      <span style={{ color: 'var(--border)' }}>·</span>
-                    )}
-                    {post.date && (
-                      <span>{post.date}</span>
-                    )}
-                  </div>
-
-                  {/* 수정 링크 */}
-                  <Link 
-                    href={`/category/${post.category}/edit/${post.slug}`}
-                    style={{
+                  {post.author && (
+                    <span style={{ 
                       fontSize: 13,
-                      fontWeight: 600,
                       color: 'var(--muted)',
-                      transition: 'color 0.2s',
-                      padding: '4px 8px',
-                      borderRadius: 6,
-                      background: 'var(--bg-secondary)'
-                    }}
-                  >
-                    수정
-                  </Link>
+                      fontWeight: 400
+                    }}>
+                      {post.author}
+                    </span>
+                  )}
+                  {post.date && (
+                    <span style={{ 
+                      fontSize: 13,
+                      color: 'var(--muted)',
+                      fontWeight: 400
+                    }}>
+                      {post.date}
+                    </span>
+                  )}
                 </div>
               </div>
             </li>

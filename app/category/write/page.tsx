@@ -138,12 +138,12 @@ export default function WritePage() {
 
   return (
     <main style={{ 
-      background: '#f8f9fa',
+      background: 'var(--bg)',
       minHeight: '100vh',
-      padding: '24px'
+      padding: '32px 20px'
     }}>
       <div style={{ 
-        maxWidth: 1200,
+        maxWidth: 1000,
         margin: '0 auto'
       }}>
         {/* 헤더 */}
@@ -151,45 +151,47 @@ export default function WritePage() {
           display: 'flex', 
           justifyContent: 'space-between', 
           alignItems: 'center',
-          marginBottom: 24,
-          background: 'white',
-          padding: '16px 24px',
-          borderRadius: 12,
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+          marginBottom: 32,
+          paddingBottom: 24,
+          borderBottom: '1px solid var(--border)'
         }}>
           <div>
             <h1 style={{ 
-              fontSize: '1.5rem', 
-              fontWeight: 700, 
+              fontSize: '32px', 
+              fontWeight: 600, 
               margin: 0,
-              marginBottom: 4
+              marginBottom: 6,
+              color: 'var(--fg)',
+              letterSpacing: '-0.03em'
             }}>
-              ✍️ 글쓰기
-        </h1>
+              글쓰기
+            </h1>
             <p style={{ 
               color: 'var(--muted)', 
               fontSize: '14px', 
-              margin: 0 
+              margin: 0,
+              fontWeight: 400
             }}>
-          새로운 복지 뉴스를 작성하세요
-        </p>
-      </div>
-          <div style={{ display: 'flex', gap: 12 }}>
+              새로운 복지 뉴스를 작성하세요
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: 10 }}>
             <button
               type="button"
-              onClick={() => setShowSettings(true)}
+              onClick={() => setShowSettings(!showSettings)}
               style={{
-                padding: '10px 20px',
-                borderRadius: 8,
-                fontWeight: 600,
-                fontSize: 14,
+                padding: '8px 16px',
+                borderRadius: 4,
+                fontWeight: 500,
+                fontSize: 13,
                 border: '1px solid var(--border)',
-                background: 'white',
+                background: showSettings ? 'var(--fg)' : 'white',
+                color: showSettings ? 'white' : 'var(--fg)',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
             >
-              ⚙️ 설정
+              설정
             </button>
             <button
               type="button"
@@ -198,26 +200,35 @@ export default function WritePage() {
                 alert('임시저장되었습니다!')
               }}
               style={{
-                padding: '10px 20px',
-                borderRadius: 8,
-                fontWeight: 600,
-                fontSize: 14,
+                padding: '8px 16px',
+                borderRadius: 4,
+                fontWeight: 500,
+                fontSize: 13,
                 border: '1px solid var(--border)',
                 background: 'white',
+                color: 'var(--fg)',
                 cursor: 'pointer',
                 transition: 'all 0.2s'
               }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--fg)'
+                e.currentTarget.style.color = 'white'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'white'
+                e.currentTarget.style.color = 'var(--fg)'
+              }}
             >
-              💾 임시저장
+              임시저장
             </button>
             <button
               onClick={submit}
               disabled={loading}
               style={{
-                padding: '10px 24px',
-                borderRadius: 8,
-                fontWeight: 600,
-                fontSize: 14,
+                padding: '8px 20px',
+                borderRadius: 4,
+                fontWeight: 500,
+                fontSize: 13,
                 background: 'var(--accent)',
                 color: 'white',
                 border: 'none',
@@ -225,38 +236,33 @@ export default function WritePage() {
                 opacity: loading ? 0.6 : 1,
                 transition: 'all 0.2s'
               }}
+              onMouseEnter={(e) => !loading && (e.currentTarget.style.opacity = '0.8')}
+              onMouseLeave={(e) => !loading && (e.currentTarget.style.opacity = '1')}
             >
-              {loading ? '발행 중...' : '✓ 발행하기'}
+              {loading ? '발행 중...' : '발행하기'}
             </button>
           </div>
         </div>
 
         {error && (
           <div style={{ 
-            padding: '14px 20px', 
+            padding: '14px 18px', 
             background: '#fee2e2', 
             color: '#dc2626',
-            borderRadius: 10,
-            fontSize: 14,
-            fontWeight: 500,
-            marginBottom: 16,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8
+            borderRadius: 4,
+            fontSize: 13,
+            fontWeight: 400,
+            marginBottom: 24,
+            border: '1px solid #fecaca'
           }}>
-            ⚠️ {error}
+            {error}
           </div>
         )}
 
-        {/* 에디터 영역 - 전체 너비 */}
-        <div style={{ display: 'grid', gap: 16 }}>
-          {/* 제목 입력 */}
-          <div style={{
-            background: 'white',
-            padding: 24,
-            borderRadius: 12,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-          }}>
+        {/* 에디터 영역 */}
+        <div style={{ display: 'grid', gap: 24 }}>
+          {/* 제목 & 슬러그 */}
+          <div style={{ display: 'grid', gap: 16 }}>
             <input
               className="form-control"
               value={frontmatter.title}
@@ -264,87 +270,105 @@ export default function WritePage() {
               placeholder="제목을 입력하세요"
               required
               style={{
-                fontSize: '1.75rem',
-                fontWeight: 700,
+                fontSize: '32px',
+                fontWeight: 600,
                 border: 'none',
                 padding: 0,
-                outline: 'none'
+                outline: 'none',
+                letterSpacing: '-0.03em',
+                background: 'transparent'
+              }}
+            />
+            
+            <input
+              className="form-control"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              placeholder="url-slug"
+              required
+              style={{
+                fontSize: '14px',
+                fontWeight: 400,
+                border: 'none',
+                borderBottom: '1px solid var(--border)',
+                padding: '8px 0',
+                outline: 'none',
+                background: 'transparent',
+                color: 'var(--muted)'
               }}
             />
           </div>
 
           {/* 탭 & 에디터 */}
           <div style={{
-            background: 'white',
-            borderRadius: 12,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+            border: '1px solid var(--border)',
+            borderRadius: 0,
             overflow: 'hidden'
           }}>
             {/* 탭 */}
             <div style={{ 
               display: 'flex',
               borderBottom: '1px solid var(--border)',
-              background: '#fafafa'
+              background: 'var(--bg-secondary)'
             }}>
               <button
                 type="button"
                 onClick={() => setActiveTab('write')}
                 style={{
-                  padding: '14px 24px',
-                  fontWeight: 600,
-                  fontSize: 14,
+                  padding: '12px 20px',
+                  fontWeight: 500,
+                  fontSize: 13,
                   border: 'none',
                   background: activeTab === 'write' ? 'white' : 'transparent',
-                  color: activeTab === 'write' ? 'var(--accent)' : 'var(--muted)',
+                  color: activeTab === 'write' ? 'var(--fg)' : 'var(--muted)',
                   cursor: 'pointer',
-                  borderBottom: activeTab === 'write' ? '2px solid var(--accent)' : 'none',
+                  borderBottom: activeTab === 'write' ? '2px solid var(--fg)' : 'none',
                   transition: 'all 0.2s'
                 }}
               >
-                ✏️ 작성하기
+                작성하기
               </button>
               <button
                 type="button"
                 onClick={() => setActiveTab('preview')}
                 style={{
-                  padding: '14px 24px',
-                  fontWeight: 600,
-                  fontSize: 14,
+                  padding: '12px 20px',
+                  fontWeight: 500,
+                  fontSize: 13,
                   border: 'none',
                   background: activeTab === 'preview' ? 'white' : 'transparent',
-                  color: activeTab === 'preview' ? 'var(--accent)' : 'var(--muted)',
+                  color: activeTab === 'preview' ? 'var(--fg)' : 'var(--muted)',
                   cursor: 'pointer',
-                  borderBottom: activeTab === 'preview' ? '2px solid var(--accent)' : 'none',
+                  borderBottom: activeTab === 'preview' ? '2px solid var(--fg)' : 'none',
                   transition: 'all 0.2s'
                 }}
               >
-                👁️ 미리보기
+                미리보기
               </button>
             </div>
 
             {/* 에디터 영역 */}
-            <div style={{ padding: 20 }}>
+            <div style={{ padding: activeTab === 'write' ? 0 : 20, background: 'white' }}>
               {activeTab === 'write' ? (
                 <RichTextEditor
                   content={content}
                   onChange={setContent}
-                  placeholder="복지 뉴스의 내용을 작성하세요..."
+                  placeholder="내용을 작성하세요..."
                 />
               ) : (
                 <div style={{ 
                   padding: 20,
                   minHeight: 600,
-                  background: '#fafafa',
-                  borderRadius: 8
+                  background: 'white'
                 }}>
-                  <div dangerouslySetInnerHTML={{ __html: content || '<p style="color: #adb5bd;">미리보기할 내용이 없습니다.</p>' }} />
+                  <div dangerouslySetInnerHTML={{ __html: content || '<p style="color: var(--muted);">미리보기할 내용이 없습니다.</p>' }} />
                 </div>
               )}
             </div>
           </div>
         </div>
 
-        {/* 설정 드로어 */}
+        {/* 설정 패널 */}
         {showSettings && (
           <>
             {/* 오버레이 */}
@@ -356,291 +380,289 @@ export default function WritePage() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                background: 'rgba(0,0,0,0.5)',
+                background: 'rgba(0,0,0,0.3)',
                 zIndex: 999,
                 animation: 'fadeIn 0.2s ease'
               }}
             />
             
-            {/* 드로어 */}
+            {/* 패널 */}
             <div style={{
               position: 'fixed',
               top: 0,
               right: 0,
               bottom: 0,
-              width: 420,
+              width: Math.min(480, window.innerWidth - 40),
               background: 'white',
-              boxShadow: '-4px 0 12px rgba(0,0,0,0.15)',
+              boxShadow: '-2px 0 8px rgba(0,0,0,0.1)',
               zIndex: 1000,
               overflowY: 'auto',
-              animation: 'slideIn 0.3s ease'
+              animation: 'slideIn 0.25s ease',
+              borderLeft: '1px solid var(--border)'
             }}>
-              {/* 드로어 헤더 */}
-              <div style={{
-                padding: '20px 24px',
-                borderBottom: '1px solid var(--border)',
-                position: 'sticky',
-                top: 0,
-                background: 'white',
-                zIndex: 10
-              }}>
-                <div style={{ 
-                  display: 'flex', 
-                  justifyContent: 'space-between', 
-                  alignItems: 'center'
-                }}>
-                  <h2 style={{ 
-                    fontSize: 18, 
-                    fontWeight: 700, 
-                    margin: 0 
-                  }}>
-                    ⚙️ 글 설정
-                  </h2>
-                  <button
-                    onClick={() => setShowSettings(false)}
-                    style={{
-                      padding: '8px 12px',
-                      border: 'none',
-                      background: '#f8f9fa',
-                      borderRadius: 8,
-                      cursor: 'pointer',
-                      fontWeight: 600,
-                      fontSize: 20,
-                      lineHeight: 1
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              </div>
-
-              {/* 드로어 콘텐츠 */}
+            {/* 헤더 */}
+            <div style={{
+              padding: '24px',
+              borderBottom: '1px solid var(--border)',
+              position: 'sticky',
+              top: 0,
+              background: 'white',
+              zIndex: 10
+            }}>
               <div style={{ 
-                padding: 24,
-                display: 'grid',
-                gap: 24
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center'
               }}>
-                {/* 기본 설정 */}
-                <div>
-                  <h3 style={{ 
-                    fontSize: 16, 
-                    fontWeight: 700, 
-                    marginBottom: 16,
+                <h2 style={{ 
+                  fontSize: 20, 
+                  fontWeight: 600, 
+                  margin: 0,
+                  letterSpacing: '-0.02em'
+                }}>
+                  글 설정
+                </h2>
+                <button
+                  onClick={() => setShowSettings(false)}
+                  style={{
+                    width: 32,
+                    height: 32,
+                    border: 'none',
+                    background: 'transparent',
+                    borderRadius: 4,
+                    cursor: 'pointer',
+                    fontWeight: 400,
+                    fontSize: 24,
+                    lineHeight: 1,
+                    color: 'var(--muted)',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 8
-                  }}>
-                    ⚙️ 기본 설정
-                  </h3>
-                  
-                  <div style={{ display: 'grid', gap: 16 }}>
-        <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        슬러그 (URL)
-                      </span>
-          <input
-            className="form-control"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-                        placeholder="my-first-post"
-            required
-                        style={{ fontSize: 14 }}
-          />
-        </label>
-
-                    <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        저자
-                      </span>
-                      <input
-                        className="form-control"
-                        value={frontmatter.author ?? ''}
-                        disabled
-                        style={{ 
-                          fontSize: 14,
-                          background: '#f8f9fa',
-                          color: '#666',
-                          cursor: 'not-allowed'
-                        }}
-                      />
-                      <span style={{ fontSize: 12, color: '#999' }}>
-                        * 로그인한 계정으로 자동 설정됩니다
-                      </span>
-                    </label>
-
-                    <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        발행 상태
-                      </span>
-                      <select
-                        className="form-control"
-                        value={frontmatter.status ?? 'published'}
-                        onChange={(e) => setFrontmatter({ ...frontmatter, status: e.target.value as any })}
-                        style={{ fontSize: 14 }}
-                      >
-                        <option value="draft">🔒 비공개 (초안)</option>
-                        <option value="published">🌐 공개</option>
-                      </select>
-                    </label>
-                  </div>
-                </div>
-
-                {/* 카테고리 */}
-                <div>
-                  <h3 style={{ 
-                    fontSize: 16, 
-                    fontWeight: 700, 
-                    marginBottom: 16,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8
-                  }}>
-                    📁 카테고리
-                  </h3>
-                  
-                  <div style={{ display: 'grid', gap: 12 }}>
-          <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        라벨
-                      </span>
-            <input
-              className="form-control"
-              value={frontmatter.label ?? ''}
-              onChange={(e) => setFrontmatter({ ...frontmatter, label: e.target.value })}
-              placeholder="리뷰"
-                        style={{ fontSize: 14 }}
-            />
-          </label>
-
-          <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        카테고리
-                      </span>
-            <input
-              className="form-control"
-              value={frontmatter.category ?? ''}
-              onChange={(e) => setFrontmatter({ ...frontmatter, category: e.target.value })}
-              placeholder="청년"
-                        style={{ fontSize: 14 }}
-            />
-          </label>
-
-          <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        서브카테고리
-                      </span>
-            <input
-              className="form-control"
-              value={frontmatter.subCategory ?? ''}
-              onChange={(e) => setFrontmatter({ ...frontmatter, subCategory: e.target.value })}
-              placeholder="일자리"
-                        style={{ fontSize: 14 }}
-            />
-          </label>
-        </div>
-                </div>
-
-                {/* 추가 정보 */}
-                <div>
-                  <h3 style={{ 
-                    fontSize: 16, 
-                    fontWeight: 700, 
-                    marginBottom: 16,
-            display: 'flex', 
-                    alignItems: 'center',
-                    gap: 8
-                  }}>
-                    📝 추가 정보
-                  </h3>
-                  
-                  <div style={{ display: 'grid', gap: 12 }}>
-        <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        날짜
-                      </span>
-          <input
-            className="form-control"
-                        type="date"
-              value={frontmatter.date ?? ''}
-              onChange={(e) => setFrontmatter({ ...frontmatter, date: e.target.value })}
-                        style={{ fontSize: 14 }}
-            />
-          </label>
-
-          <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        요약
-                      </span>
-                      <textarea
-              className="form-control"
-                        rows={3}
-              value={frontmatter.summary ?? ''}
-              onChange={(e) => setFrontmatter({ ...frontmatter, summary: e.target.value })}
-                        placeholder="간단한 요약을 입력하세요"
-                        style={{ fontSize: 14 }}
-            />
-          </label>
-
-          <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        대표 이미지 URL
-                      </span>
-            <input
-              className="form-control"
-              value={frontmatter.image ?? ''}
-              onChange={(e) => setFrontmatter({ ...frontmatter, image: e.target.value })}
-              placeholder="https://..."
-                        style={{ fontSize: 14 }}
-                      />
-                      {frontmatter.image && (
-                        <img 
-                          src={frontmatter.image} 
-                          alt="미리보기"
-                          style={{
-                            width: '100%',
-                            height: 150,
-                            objectFit: 'cover',
-                            borderRadius: 8,
-                            marginTop: 8
-                          }}
-                        />
-                      )}
-          </label>
-
-        <label style={{ display: 'grid', gap: 8 }}>
-                      <span style={{ fontWeight: 600, fontSize: 13, color: '#666' }}>
-                        태그 (쉼표로 구분)
-                      </span>
-          <input
-            className="form-control"
-            value={frontmatter.tags ?? ''}
-            onChange={(e) => setFrontmatter({ ...frontmatter, tags: e.target.value })}
-            placeholder="복지, 청년, 일자리"
-                        style={{ fontSize: 14 }}
-                      />
-                      {frontmatter.tags && (
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
-                          {frontmatter.tags.split(',').map((tag, i) => (
-                            <span key={i} style={{
-                              padding: '4px 10px',
-                              background: '#e9ecef',
-                              borderRadius: 6,
-                              fontSize: 12,
-            fontWeight: 500
-          }}>
-                              #{tag.trim()}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                    </label>
-                  </div>
-                </div>
+                    justifyContent: 'center',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = 'var(--bg-secondary)'
+                    e.currentTarget.style.color = 'var(--fg)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.color = 'var(--muted)'
+                  }}
+                >
+                  ×
+                </button>
               </div>
-          </div>
+            </div>
+
+            {/* 콘텐츠 */}
+            <div style={{ 
+              padding: 24,
+              display: 'grid',
+              gap: 32
+            }}>
+              {/* 기본 정보 */}
+              <div style={{ display: 'grid', gap: 16 }}>
+                <h3 style={{ 
+                  fontSize: 14, 
+                  fontWeight: 600, 
+                  margin: 0,
+                  color: 'var(--fg)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>
+                  기본 정보
+                </h3>
+                
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    저자
+                  </span>
+                  <input
+                    className="form-control"
+                    value={frontmatter.author ?? ''}
+                    disabled
+                    style={{ 
+                      fontSize: 14,
+                      background: 'var(--bg-secondary)',
+                      color: 'var(--muted)',
+                      cursor: 'not-allowed',
+                      border: '1px solid var(--border)'
+                    }}
+                  />
+                  <span style={{ fontSize: 12, color: 'var(--muted)' }}>
+                    로그인한 계정으로 자동 설정
+                  </span>
+                </label>
+
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    발행 상태
+                  </span>
+                  <select
+                    className="form-control"
+                    value={frontmatter.status ?? 'published'}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, status: e.target.value as any })}
+                    style={{ fontSize: 14 }}
+                  >
+                    <option value="draft">비공개 (초안)</option>
+                    <option value="published">공개</option>
+                  </select>
+                </label>
+
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    날짜
+                  </span>
+                  <input
+                    className="form-control"
+                    type="date"
+                    value={frontmatter.date ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, date: e.target.value })}
+                    style={{ fontSize: 14 }}
+                  />
+                </label>
+              </div>
+
+              {/* 카테고리 */}
+              <div style={{ display: 'grid', gap: 16 }}>
+                <h3 style={{ 
+                  fontSize: 14, 
+                  fontWeight: 600, 
+                  margin: 0,
+                  color: 'var(--fg)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>
+                  카테고리
+                </h3>
+                
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    라벨
+                  </span>
+                  <input
+                    className="form-control"
+                    value={frontmatter.label ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, label: e.target.value })}
+                    placeholder="예: 리뷰, 뉴스"
+                    style={{ fontSize: 14 }}
+                  />
+                </label>
+
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    카테고리
+                  </span>
+                  <input
+                    className="form-control"
+                    value={frontmatter.category ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, category: e.target.value })}
+                    placeholder="예: 청년, 노인"
+                    style={{ fontSize: 14 }}
+                  />
+                </label>
+
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    서브카테고리
+                  </span>
+                  <input
+                    className="form-control"
+                    value={frontmatter.subCategory ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, subCategory: e.target.value })}
+                    placeholder="예: 일자리, 주거"
+                    style={{ fontSize: 14 }}
+                  />
+                </label>
+              </div>
+
+              {/* 콘텐츠 */}
+              <div style={{ display: 'grid', gap: 16 }}>
+                <h3 style={{ 
+                  fontSize: 14, 
+                  fontWeight: 600, 
+                  margin: 0,
+                  color: 'var(--fg)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em'
+                }}>
+                  콘텐츠
+                </h3>
+                
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    요약
+                  </span>
+                  <textarea
+                    className="form-control"
+                    rows={3}
+                    value={frontmatter.summary ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, summary: e.target.value })}
+                    placeholder="글의 간단한 요약을 입력하세요"
+                    style={{ fontSize: 14, resize: 'vertical' }}
+                  />
+                </label>
+
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    대표 이미지 URL
+                  </span>
+                  <input
+                    className="form-control"
+                    value={frontmatter.image ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, image: e.target.value })}
+                    placeholder="https://..."
+                    style={{ fontSize: 14 }}
+                  />
+                  {frontmatter.image && (
+                    <img 
+                      src={frontmatter.image} 
+                      alt="미리보기"
+                      style={{
+                        width: '100%',
+                        height: 160,
+                        objectFit: 'cover',
+                        borderRadius: 4,
+                        marginTop: 8,
+                        border: '1px solid var(--border)'
+                      }}
+                    />
+                  )}
+                </label>
+
+                <label style={{ display: 'grid', gap: 8 }}>
+                  <span style={{ fontWeight: 500, fontSize: 13, color: 'var(--muted)' }}>
+                    태그 (쉼표로 구분)
+                  </span>
+                  <input
+                    className="form-control"
+                    value={frontmatter.tags ?? ''}
+                    onChange={(e) => setFrontmatter({ ...frontmatter, tags: e.target.value })}
+                    placeholder="복지, 청년, 일자리"
+                    style={{ fontSize: 14 }}
+                  />
+                  {frontmatter.tags && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 4 }}>
+                      {frontmatter.tags.split(',').map((tag, i) => (
+                        <span key={i} style={{
+                          padding: '4px 10px',
+                          background: 'var(--bg-secondary)',
+                          borderRadius: 4,
+                          fontSize: 12,
+                          fontWeight: 500,
+                          color: 'var(--fg)'
+                        }}>
+                          #{tag.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </label>
+              </div>
+            </div>
           </>
         )}
-        </div>
+      </div>
 
       {/* 애니메이션 */}
       <style jsx>{`

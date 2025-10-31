@@ -67,22 +67,22 @@ export default function SiteHeader() {
                   <button 
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     style={{
-                      width: 36,
-                      height: 36,
+                      width: 32,
+                      height: 32,
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      border: '2px solid var(--border)',
+                      background: 'var(--fg)',
+                      border: 'none',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
                       color: 'white',
-                      fontWeight: 700,
-                      fontSize: 14,
+                      fontWeight: 500,
+                      fontSize: 13,
                       cursor: 'pointer',
-                      transition: 'transform 0.2s ease'
+                      transition: 'opacity 0.2s ease'
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.8'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                     aria-label="user menu"
                   >
                     {user.email?.[0].toUpperCase() || 'U'}
@@ -136,62 +136,46 @@ export default function SiteHeader() {
                   <Link 
                     href="/auth/login"
                     style={{
-                      padding: '8px 16px',
-                      borderRadius: 8,
+                      padding: '6px 14px',
+                      borderRadius: 2,
                       background: 'transparent',
                       border: '1px solid var(--border)',
-                      fontSize: 14,
-                      fontWeight: 600,
+                      fontSize: 13,
+                      fontWeight: 500,
                       transition: 'all 0.2s ease',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 6
+                      color: 'var(--fg)'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'var(--bg-secondary)'
-                      e.currentTarget.style.borderColor = 'var(--accent)'
+                      e.currentTarget.style.background = 'var(--fg)'
+                      e.currentTarget.style.borderColor = 'var(--fg)'
+                      e.currentTarget.style.color = 'white'
                     }}
                     onMouseLeave={(e) => {
                       e.currentTarget.style.background = 'transparent'
                       e.currentTarget.style.borderColor = 'var(--border)'
+                      e.currentTarget.style.color = 'var(--fg)'
                     }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-                      <polyline points="10 17 15 12 10 7"></polyline>
-                      <line x1="15" y1="12" x2="3" y2="12"></line>
-                    </svg>
                     로그인
                   </Link>
                   <Link 
                     href="/auth/signup"
                     style={{
-                      padding: '8px 16px',
-                      borderRadius: 8,
+                      padding: '6px 14px',
+                      borderRadius: 2,
                       background: 'var(--accent)',
                       color: 'white',
-                      fontSize: 14,
-                      fontWeight: 600,
-                      transition: 'all 0.2s ease',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 6
+                      fontSize: 13,
+                      fontWeight: 500,
+                      transition: 'all 0.2s ease'
                     }}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.background = 'var(--accent-hover)'
-                      e.currentTarget.style.transform = 'translateY(-1px)'
+                      e.currentTarget.style.opacity = '0.8'
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.background = 'var(--accent)'
-                      e.currentTarget.style.transform = 'translateY(0)'
+                      e.currentTarget.style.opacity = '1'
                     }}
                   >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="8.5" cy="7" r="4"></circle>
-                      <line x1="20" y1="8" x2="20" y2="14"></line>
-                      <line x1="23" y1="11" x2="17" y2="11"></line>
-                    </svg>
                     회원가입
                   </Link>
                 </>

@@ -384,19 +384,22 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
   return (
     <div style={{ 
-      border: '1px solid var(--border)', 
-      borderRadius: 12,
-      overflow: 'hidden',
+      border: 0,
+      borderRadius: 0,
+      overflow: 'visible',
       background: 'white'
     }}>
       {/* 툴바 */}
       <div style={{ 
         display: 'flex', 
         gap: 4,
-        padding: '12px',
+        padding: '16px',
         borderBottom: '1px solid var(--border)',
         flexWrap: 'wrap',
-        background: '#fafafa'
+        background: 'white',
+        position: 'sticky',
+        top: 0,
+        zIndex: 10
       }}>
         <button
           type="button"
@@ -404,12 +407,12 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
           className={editor.isActive('bold') ? 'is-active' : ''}
           style={{
             padding: '6px 12px',
-            borderRadius: 6,
+            borderRadius: 2,
             border: '1px solid var(--border)',
-            background: editor.isActive('bold') ? 'var(--accent)' : 'white',
-            color: editor.isActive('bold') ? 'white' : 'inherit',
+            background: editor.isActive('bold') ? 'var(--fg)' : 'white',
+            color: editor.isActive('bold') ? 'white' : 'var(--fg)',
             fontWeight: 600,
-            fontSize: 14,
+            fontSize: 13,
             cursor: 'pointer',
             transition: 'all 0.2s'
           }}
@@ -763,7 +766,7 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
 
       {/* 에디터 */}
       <div style={{ 
-        padding: '20px',
+        padding: '32px 24px',
         minHeight: 600
       }}>
         <EditorContent editor={editor} />
@@ -772,13 +775,54 @@ export default function RichTextEditor({ content, onChange, placeholder }: RichT
       <style jsx global>{`
         .ProseMirror {
           outline: none;
+          font-size: 16px;
+          line-height: 1.7;
+          color: var(--fg);
         }
         .ProseMirror p.is-editor-empty:first-child::before {
           content: attr(data-placeholder);
           float: left;
-          color: #adb5bd;
+          color: var(--muted);
           pointer-events: none;
           height: 0;
+        }
+        
+        .ProseMirror h1 {
+          font-size: 32px;
+          font-weight: 600;
+          margin: 24px 0 16px;
+          letter-spacing: -0.03em;
+        }
+        
+        .ProseMirror h2 {
+          font-size: 24px;
+          font-weight: 600;
+          margin: 20px 0 12px;
+          letter-spacing: -0.02em;
+        }
+        
+        .ProseMirror h3 {
+          font-size: 20px;
+          font-weight: 600;
+          margin: 16px 0 10px;
+          letter-spacing: -0.02em;
+        }
+        
+        .ProseMirror p {
+          margin: 12px 0;
+        }
+        
+        .ProseMirror ul,
+        .ProseMirror ol {
+          padding-left: 24px;
+          margin: 12px 0;
+        }
+        
+        .ProseMirror blockquote {
+          border-left: 3px solid var(--border);
+          padding-left: 16px;
+          color: var(--muted);
+          margin: 16px 0;
         }
         
         /* 리사이즈 가능한 이미지 */

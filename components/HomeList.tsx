@@ -11,7 +11,7 @@ export default async function HomeList({ categorySlug }: Props) {
   return (
     <section className="home-list" id="home-list">
       <div className="wrapper-fluid">
-        <div className="main-intro" style={{ padding: '32px 0 48px' }}>
+        <div className="main-intro" style={{ padding: '40px 0 56px', borderBottom: '1px solid var(--border)', marginBottom: '48px' }}>
           <div style={{ 
             display: 'flex', 
             alignItems: 'center', 
@@ -21,37 +21,40 @@ export default async function HomeList({ categorySlug }: Props) {
           }}>
             <div>
               <h2 style={{ 
-                fontSize: '28px', 
-                fontWeight: 800, 
-                margin: '0 0 8px',
-                letterSpacing: '-0.02em'
+                fontSize: '32px', 
+                fontWeight: 600, 
+                margin: '0 0 6px',
+                letterSpacing: '-0.03em',
+                color: 'var(--fg)'
               }}>
                 복지 뉴스
               </h2>
               <p style={{ 
                 margin: 0, 
                 color: 'var(--muted)',
-                fontSize: '15px'
+                fontSize: '14px',
+                fontWeight: 400
               }}>
                 최신 복지 관련 소식을 확인하세요
               </p>
             </div>
             <div style={{ 
               display: 'flex', 
-              gap: 10,
+              gap: 12,
               alignItems: 'center'
             }}>
               <Link 
                 className="action-button" 
                 href="/category"
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '10px',
+                  padding: '8px 18px',
+                  borderRadius: '4px',
                   border: '1px solid var(--border)',
-                  fontWeight: 600,
-                  fontSize: '14px',
+                  fontWeight: 500,
+                  fontSize: '13px',
                   transition: 'all 0.2s ease',
-                  background: 'white'
+                  background: 'white',
+                  color: 'var(--fg)'
                 }}
               >
                 전체 보기
@@ -60,10 +63,10 @@ export default async function HomeList({ categorySlug }: Props) {
                 className="action-button-primary" 
                 href="/category/write"
                 style={{
-                  padding: '10px 20px',
-                  borderRadius: '10px',
-                  fontWeight: 600,
-                  fontSize: '14px',
+                  padding: '8px 18px',
+                  borderRadius: '4px',
+                  fontWeight: 500,
+                  fontSize: '13px',
                   transition: 'all 0.2s ease',
                   background: 'var(--accent)',
                   color: 'white'
@@ -90,47 +93,26 @@ export default async function HomeList({ categorySlug }: Props) {
                   ) : (
                     <div className="img-placeholder" />
                   )}
-                  
-                  {/* Featured 배지 */}
-                  {post.featured && (
-                    <div style={{
-                      position: 'absolute',
-                      top: 12,
-                      right: 12,
-                      background: 'rgba(255, 215, 0, 0.95)',
-                      color: '#000',
-                      padding: '4px 12px',
-                      borderRadius: '6px',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      letterSpacing: '0.5px',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                    }}>
-                      ⭐ 추천
-                    </div>
-                  )}
-                  
-                  {/* 카테고리 배지 */}
+                </Link>
+
+                <div className="card-body">
+                  {/* 카테고리 */}
                   {categoryLabel && (
                     <div style={{
-                      position: 'absolute',
-                      top: 12,
-                      left: 12,
-                      background: 'rgba(59, 130, 246, 0.95)',
+                      display: 'inline-block',
+                      background: 'var(--category-bg)',
                       color: 'white',
-                      padding: '5px 12px',
-                      borderRadius: '8px',
-                      fontSize: '12px',
+                      padding: '4px 10px',
+                      fontSize: '11px',
                       fontWeight: 600,
-                      backdropFilter: 'blur(8px)',
-                      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+                      letterSpacing: '0.02em',
+                      textTransform: 'uppercase',
+                      marginBottom: '12px'
                     }}>
                       {categoryLabel}
                     </div>
                   )}
-                </Link>
 
-                <div className="card-body">
                   {/* 제목 */}
                   <h3 className="card-title">
                     <Link href={`/category/view/${post.slug}`}>{post.title}</Link>
@@ -149,76 +131,30 @@ export default async function HomeList({ categorySlug }: Props) {
                     </p>
                   )}
 
-                  {/* 태그 */}
-                  {post.tags && post.tags.length > 0 && (
-                    <div style={{
-                      display: 'flex',
-                      flexWrap: 'wrap',
-                      gap: 6,
-                      marginBottom: 12
-                    }}>
-                      {post.tags.slice(0, 3).map((tag, idx) => (
-                        <span
-                          key={idx}
-                          style={{
-                            fontSize: '12px',
-                            color: 'var(--accent)',
-                            background: 'rgba(59, 130, 246, 0.08)',
-                            padding: '3px 10px',
-                            borderRadius: '6px',
-                            fontWeight: 600,
-                            border: '1px solid rgba(59, 130, 246, 0.15)'
-                          }}
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* 하단 메타 정보 */}
+                  {/* 메타 정보 */}
                   <div style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: 8,
-                    paddingTop: 8,
-                    borderTop: '1px solid var(--border)',
-                    marginTop: 'auto'
+                    gap: 12,
+                    marginTop: 'auto',
+                    paddingTop: '4px'
                   }}>
                     {/* 작성자 */}
                     {post.author && (
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
+                      <span style={{
                         fontSize: '13px',
                         color: 'var(--muted)',
-                        fontWeight: 600
+                        fontWeight: 400
                       }}>
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                          <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
                         {post.author}
-                      </div>
+                      </span>
                     )}
                     
                     {/* 날짜 */}
                     {post.date && (
-                      <div className="card-date" style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 4
-                      }}>
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
+                      <span className="card-date">
                         {post.date}
-                      </div>
+                      </span>
                     )}
                   </div>
                 </div>
