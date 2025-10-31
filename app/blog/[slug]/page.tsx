@@ -211,7 +211,7 @@ export default async function BlogPostPage({ params }: Props) {
                 태그
               </h3>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {supabasePost.tags.map((tag, idx) => (
+                {supabasePost.tags.map((tag: string, idx: number) => (
                   <span
                     key={idx}
                     style={{
