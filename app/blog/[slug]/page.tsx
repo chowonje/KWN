@@ -4,13 +4,15 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 import DOMPurify from 'isomorphic-dompurify'
 
-type Props = { params: { slug: string } }
+type Props = { params: Promise<{ slug: string }> }
 
 export const dynamic = 'force-dynamic'
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  
   // Supabase 우선 시도
-  const supabasePost = await getSupabasePost(params.slug)
+  const supabasePost = await getSupabasePost(slug)
   
   if (supabasePost) {
     return {
@@ -23,10 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   // MDX fallback
-  const mdxPost = getPost(params.slug)
+  const mdxPost = getPost(slug)
   if (mdxPost) {
     return {
-      title: `${mdxPost.frontmatter.title || params.slug} - KWN`,
+      title: `${mdxPost.frontmatter.title || slug} - KWN`,
       description: mdxPost.frontmatter.summary
     }
   }
@@ -35,8 +37,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
+  
   // 1. Supabase에서 먼저 시도
-  const supabasePost = await getSupabasePost(params.slug)
+  const supabasePost = await getSupabasePost(slug)
   
   if (supabasePost) {
     return (
@@ -269,7 +273,7 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   // 2. MDX fallback
-  const mdxPost = getPost(params.slug)
+  const mdxPost = getPost(slug)
   
   if (mdxPost) {
     return (
@@ -280,7 +284,7 @@ export default async function BlogPostPage({ params }: Props) {
             fontWeight: 800,
             marginBottom: '2rem'
           }}>
-            {mdxPost.frontmatter.title || params.slug}
+            {mdxPost.frontmatter.title || slug}
           </h1>
           <div 
             className="prose"
